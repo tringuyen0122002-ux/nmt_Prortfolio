@@ -50,6 +50,7 @@ export default {
 				},
 				navy: 'hsl(var(--navy))',
 				slate: 'hsl(var(--slate))',
+				'light-grey': 'hsl(var(--light-grey))',
 				teal: 'hsl(var(--teal))',
 				orange: 'hsl(var(--orange))',
 				popover: {
@@ -109,6 +110,10 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			transitionProperty: {
+				'fast': 'var(--transition-fast)',
+				'smooth': 'var(--transition-smooth)'
 			}
 		}
 	},

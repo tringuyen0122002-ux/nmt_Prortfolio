@@ -45,6 +45,7 @@ const translations = {
     // Projects
     'projects.title': 'Projects',
     'projects.viewDetails': 'View Details',
+    'projects.mockups.title': 'Project Mockups',
     'projects.cms.title': 'Contract Management System (CMS)',
     'projects.cms.company': 'Central Retail Vietnam',
     'projects.cms.role': 'Assistant Project Manager / BA',
@@ -106,6 +107,7 @@ const translations = {
     // Projects
     'projects.title': 'Dự án',
     'projects.viewDetails': 'Xem chi tiết',
+    'projects.mockups.title': 'Mockup dự án',
     'projects.cms.title': 'Hệ thống quản lý hợp đồng (CMS)',
     'projects.cms.company': 'Central Retail Vietnam',
     'projects.cms.role': 'Trợ lý PM / BA',

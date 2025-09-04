@@ -8,57 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Core Brand Colors */
-    --background: 248 250 252; /* Off-white #F8FAFC */
-    --foreground: 219 43% 15%; /* Navy shade for text */
-    --navy: 220 76% 15%; /* Navy #0F1C3F */
-    --slate: 215 16% 47%; /* Slate Gray #6B7280 */
-    --off-white: 248 250 252; /* Off-White #F8FAFC */
-    --teal: 172 66% 44%; /* Teal #14B8A6 */
-    --orange: 41 96% 51%; /* Orange #F59E0B */
+    /* Enterprise Brand Colors */
+    --background: 220 14% 96%; /* Light Grey #F3F4F6 */
+    --foreground: 210 50% 22%; /* Navy for text */
+    --navy: 210 50% 22%; /* Navy #1D3557 */
+    --slate: 217 14% 48%; /* Slate Grey #6B7B8C */
+    --light-grey: 220 14% 96%; /* Light Grey #F3F4F6 */
+    --teal: 188 83% 32%; /* Accent Teal #0E7490 */
+    --orange: 43 100% 47%; /* Accent Orange #F0A500 */
 
     /* Portfolio Theme Colors */
-    --primary: 220 76% 15%; /* Navy */
-    --primary-foreground: 248 250 252; /* Off-white */
+    --primary: 210 50% 22%; /* Navy */
+    --primary-foreground: 0 0% 100%; /* White */
     
-    --secondary: 215 16% 47%; /* Slate */
-    --secondary-foreground: 248 250 252;
+    --secondary: 217 14% 48%; /* Slate Grey */
+    --secondary-foreground: 0 0% 100%;
     
-    --accent: 172 66% 44%; /* Teal */
+    --accent: 188 83% 32%; /* Teal */
     --accent-foreground: 0 0% 100%;
     
-    --accent-orange: 41 96% 51%; /* Orange */
+    --accent-orange: 43 100% 47%; /* Orange */
     --accent-orange-foreground: 0 0% 100%;
 
     /* UI Elements */
     --card: 0 0% 100%;
-    --card-foreground: 219 43% 15%;
+    --card-foreground: 210 50% 22%;
     --card-border: 220 13% 91%;
-    --card-shadow: 220 43% 11% / 0.1;
+    --card-shadow: 210 50% 22% / 0.1;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 219 43% 15%;
+    --popover-foreground: 210 50% 22%;
 
     --muted: 220 13% 91%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 217 14% 48%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 172 66% 44%;
+    --ring: 188 83% 32%;
 
-    /* Professional Gradients */
+    /* Enterprise Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--navy)) 0%, hsl(var(--slate)) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 13% 96%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 96%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(var(--teal)) 0%, hsl(var(--orange)) 100%);
     
-    /* Professional Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(220 43% 11% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 43% 11% / 0.1), 0 2px 4px -1px hsl(220 43% 11% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(220 43% 11% / 0.1), 0 4px 6px -2px hsl(220 43% 11% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(220 43% 11% / 0.1), 0 10px 10px -5px hsl(220 43% 11% / 0.04);
+    /* Enterprise Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(210 50% 22% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(210 50% 22% / 0.1), 0 2px 4px -1px hsl(210 50% 22% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(210 50% 22% / 0.1), 0 4px 6px -2px hsl(210 50% 22% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(210 50% 22% / 0.1), 0 10px 10px -5px hsl(210 50% 22% / 0.04);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

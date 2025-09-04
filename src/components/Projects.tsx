@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ExternalLink, Calendar } from 'lucide-react';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { ExternalLink, Calendar, Upload } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -21,6 +22,7 @@ interface Project {
 
 export const Projects = () => {
   const { t } = useLanguage();
+  const [rmsImages, setRmsImages] = useState<File[]>([]);
 
   const projects: Project[] = [
     {
@@ -178,6 +180,21 @@ export const Projects = () => {
                             ))}
                           </ul>
                         </div>
+
+                        {/* Image Upload for RMS Project */}
+                        {project.id === 'rms' && (
+                          <div>
+                            <h4 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
+                              <Upload className="w-5 h-5" />
+                              Project Mockups
+                            </h4>
+                            <ImageUpload
+                              onImagesChange={setRmsImages}
+                              maxImages={8}
+                              className="max-w-2xl"
+                            />
+                          </div>
+                        )}
                       </div>
                     </DialogContent>
                   </Dialog>
