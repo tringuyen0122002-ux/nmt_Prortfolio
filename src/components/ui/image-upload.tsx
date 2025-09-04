@@ -2,74 +2,68 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Upload, X, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, ChevronLeft, ChevronRight, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useProjectMockups } from '@/hooks/useProjectMockups';
 
 interface ImageUploadProps {
-  onImagesChange?: (images: File[]) => void;
+  projectId: string;
   maxImages?: number;
   className?: string;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
-  onImagesChange,
+  projectId,
   maxImages = 10,
   className
 }) => {
-  const [images, setImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const { mockups, isUploading, uploadMockups, deleteMockup, getImageUrl } = useProjectMockups(projectId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (files: FileList | null) => {
-    if (!files) return;
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files || isUploading) return;
 
     const validFiles = Array.from(files).filter(file => {
       return file.type.startsWith('image/') && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg');
     });
 
-    const remainingSlots = maxImages - images.length;
+    const remainingSlots = maxImages - mockups.length;
     const filesToAdd = validFiles.slice(0, remainingSlots);
 
     if (filesToAdd.length > 0) {
-      const newImages = [...images, ...filesToAdd];
-      setImages(newImages);
-      onImagesChange?.(newImages);
-
-      // Create preview URLs
-      const newUrls = filesToAdd.map(file => URL.createObjectURL(file));
-      const allUrls = [...previewUrls, ...newUrls];
-      setPreviewUrls(allUrls);
+      try {
+        await uploadMockups(filesToAdd);
+      } catch (error) {
+        console.error('Failed to upload images:', error);
+      }
     }
   };
 
-  const removeImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index);
-    const newUrls = previewUrls.filter((_, i) => i !== index);
-    
-    // Revoke the URL to free memory
-    if (previewUrls[index]) {
-      URL.revokeObjectURL(previewUrls[index]);
-    }
-    
-    setImages(newImages);
-    setPreviewUrls(newUrls);
-    onImagesChange?.(newImages);
+  const removeImage = async (index: number) => {
+    const mockup = mockups[index];
+    if (!mockup) return;
 
-    // Adjust current index if needed
-    if (currentImageIndex >= newUrls.length && newUrls.length > 0) {
-      setCurrentImageIndex(newUrls.length - 1);
-    } else if (newUrls.length === 0) {
-      setCurrentImageIndex(0);
+    try {
+      await deleteMockup(mockup.id, mockup.file_path);
+      
+      // Adjust current index if needed
+      if (currentImageIndex >= mockups.length - 1 && mockups.length > 1) {
+        setCurrentImageIndex(mockups.length - 2);
+      } else if (mockups.length === 1) {
+        setCurrentImageIndex(0);
+      }
+    } catch (error) {
+      console.error('Failed to delete image:', error);
     }
   };
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % previewUrls.length);
+    setCurrentImageIndex((prev) => (prev + 1) % mockups.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + previewUrls.length) % previewUrls.length);
+    setCurrentImageIndex((prev) => (prev - 1 + mockups.length) % mockups.length);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -87,8 +81,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className={cn("space-y-4", className)}>
       {/* Upload Area */}
       <div
-        className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-accent/50 transition-colors cursor-pointer"
-        onClick={() => fileInputRef.current?.click()}
+        className={cn(
+          "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-accent/50 transition-colors",
+          isUploading ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+        )}
+        onClick={() => !isUploading && fileInputRef.current?.click()}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -99,32 +96,39 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           accept="image/png,image/jpeg,image/jpg"
           onChange={(e) => handleFileSelect(e.target.files)}
           className="hidden"
+          disabled={isUploading}
         />
         
         <div className="flex flex-col items-center gap-2">
-          <Upload className="h-8 w-8 text-muted-foreground" />
+          {isUploading ? (
+            <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+          ) : (
+            <Upload className="h-8 w-8 text-muted-foreground" />
+          )}
           <div>
-            <p className="text-sm font-medium">Upload Mockups</p>
+            <p className="text-sm font-medium">
+              {isUploading ? 'Uploading...' : 'Upload Mockups'}
+            </p>
             <p className="text-xs text-muted-foreground">
               Drag & drop or click to browse • PNG, JPEG only
             </p>
           </div>
           <Badge variant="secondary" className="text-xs">
-            {images.length}/{maxImages} images
+            {mockups.length}/{maxImages} images
           </Badge>
         </div>
       </div>
 
       {/* Image Gallery */}
-      {previewUrls.length > 0 && (
+      {mockups.length > 0 && (
         <Card>
           <CardContent className="p-4">
             <div className="space-y-3">
               {/* Main Image Display */}
               <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
-                {previewUrls[currentImageIndex] ? (
+                {mockups[currentImageIndex] ? (
                   <img
-                    src={previewUrls[currentImageIndex]}
+                    src={getImageUrl(mockups[currentImageIndex].file_path)}
                     alt={`Mockup ${currentImageIndex + 1}`}
                     className="w-full h-full object-contain"
                   />
@@ -135,7 +139,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 )}
 
                 {/* Navigation Arrows */}
-                {previewUrls.length > 1 && (
+                {mockups.length > 1 && (
                   <>
                     <Button
                       variant="secondary"
@@ -168,11 +172,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               </div>
 
               {/* Thumbnail Strip */}
-              {previewUrls.length > 1 && (
+              {mockups.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-2">
-                  {previewUrls.map((url, index) => (
+                  {mockups.map((mockup, index) => (
                     <button
-                      key={index}
+                      key={mockup.id}
                       onClick={() => setCurrentImageIndex(index)}
                       className={cn(
                         "flex-shrink-0 w-16 h-12 rounded border-2 overflow-hidden transition-all",
@@ -182,7 +186,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                       )}
                     >
                       <img
-                        src={url}
+                        src={getImageUrl(mockup.file_path)}
                         alt={`Thumbnail ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
@@ -194,14 +198,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               {/* Image Info */}
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>
-                  {previewUrls.length > 0
-                    ? `${currentImageIndex + 1} of ${previewUrls.length}`
+                  {mockups.length > 0
+                    ? `${currentImageIndex + 1} of ${mockups.length}`
                     : 'No images'
                   }
                 </span>
-                {images[currentImageIndex] && (
+                {mockups[currentImageIndex] && (
                   <span className="truncate ml-2">
-                    {images[currentImageIndex].name}
+                    {mockups[currentImageIndex].file_name}
                   </span>
                 )}
               </div>

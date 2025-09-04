@@ -22,7 +22,6 @@ interface Project {
 
 export const Projects = () => {
   const { t } = useLanguage();
-  const [rmsImages, setRmsImages] = useState<File[]>([]);
 
   const projects: Project[] = [
     {
@@ -181,20 +180,18 @@ export const Projects = () => {
                           </ul>
                         </div>
 
-                        {/* Image Upload for RMS Project */}
-                        {project.id === 'rms' && (
-                          <div>
-                            <h4 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-                              <Upload className="w-5 h-5" />
-                              Project Mockups
-                            </h4>
-                            <ImageUpload
-                              onImagesChange={setRmsImages}
-                              maxImages={8}
-                              className="max-w-2xl"
-                            />
-                          </div>
-                        )}
+                        {/* Image Upload for All Projects */}
+                        <div>
+                          <h4 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
+                            <Upload className="w-5 h-5" />
+                            Project Mockups
+                          </h4>
+                          <ImageUpload
+                            projectId={project.id}
+                            maxImages={8}
+                            className="max-w-2xl"
+                          />
+                        </div>
                       </div>
                     </DialogContent>
                   </Dialog>
