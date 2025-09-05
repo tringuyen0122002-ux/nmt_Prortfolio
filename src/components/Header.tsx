@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LanguageToggle } from './LanguageToggle';
+import AuthButton from './AuthButton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Menu } from 'lucide-react';
 
@@ -70,8 +71,9 @@ export const Header = () => {
           </Button>
         </nav>
 
-        {/* Language Toggle & Mobile Menu */}
+        {/* Language Toggle, Auth & Mobile Menu */}
         <div className="flex items-center space-x-4">
+          <AuthButton />
           <LanguageToggle />
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-5 w-5" />

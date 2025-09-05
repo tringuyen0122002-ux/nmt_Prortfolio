@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProjectMockup {
   id: string;
@@ -9,9 +10,11 @@ interface ProjectMockup {
   file_size: number | null;
   mime_type: string | null;
   uploaded_at: string;
+  owner_id: string;
 }
 
 export const useProjectMockups = (projectId: string) => {
+  const { user } = useAuth();
   const [mockups, setMockups] = useState<ProjectMockup[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,10 +38,12 @@ export const useProjectMockups = (projectId: string) => {
   };
 
   const uploadMockups = async (files: File[]) => {
+    if (!user) throw new Error('User must be authenticated');
+    
     setIsUploading(true);
     try {
       const uploadPromises = files.map(async (file) => {
-        const fileName = `${projectId}/${Date.now()}_${file.name}`;
+        const fileName = `${user.id}/${projectId}/${Date.now()}_${file.name}`;
         
         // Upload file to storage
         const { data: uploadData, error: uploadError } = await supabase.storage
@@ -56,6 +61,7 @@ export const useProjectMockups = (projectId: string) => {
             file_path: uploadData.path,
             file_size: file.size,
             mime_type: file.type,
+            owner_id: user.id,
           })
           .select()
           .single();
@@ -107,10 +113,10 @@ export const useProjectMockups = (projectId: string) => {
   };
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && user) {
       fetchMockups();
     }
-  }, [projectId]);
+  }, [projectId, user]);
 
   return {
     mockups,
