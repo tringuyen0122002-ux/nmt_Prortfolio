@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       project_mockups: {
         Row: {
           file_name: string
@@ -21,6 +48,7 @@ export type Database = {
           file_size: number | null
           id: string
           mime_type: string | null
+          owner_id: string | null
           project_id: string
           uploaded_at: string
         }
@@ -30,6 +58,7 @@ export type Database = {
           file_size?: number | null
           id?: string
           mime_type?: string | null
+          owner_id?: string | null
           project_id: string
           uploaded_at?: string
         }
@@ -39,8 +68,39 @@ export type Database = {
           file_size?: number | null
           id?: string
           mime_type?: string | null
+          owner_id?: string | null
           project_id?: string
           uploaded_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
